@@ -1,5 +1,5 @@
+import { useState, type ReactNode } from "react"
 import { X } from "lucide-react"
-import type { ReactNode } from "react"
 
 const fieldClass =
   "w-full rounded-md border border-outline-variant/40 bg-surface-container-low/40 px-3 py-3 font-body text-sm text-on-surface placeholder:text-on-surface-variant focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"
@@ -104,6 +104,19 @@ export function TagListField({
   onChange: (items: string[]) => void
   placeholder: string
 }>) {
+  const [draft, setDraft] = useState("")
+
+  const commit = (raw: string) => {
+    const next = parseTagInput(raw)
+    if (!next.length) return
+    const merged = [...items]
+    for (const item of next) {
+      if (!merged.includes(item)) merged.push(item)
+    }
+    onChange(merged)
+    setDraft("")
+  }
+
   return (
     <div>
       <FieldLabel>{label}</FieldLabel>
@@ -125,19 +138,47 @@ export function TagListField({
           </span>
         ))}
       </div>
-      <input
+      <textarea
+        value={draft}
+        rows={3}
         placeholder={placeholder}
+        onChange={(e) => setDraft(e.target.value)}
+        onPaste={(e) => {
+          const text = e.clipboardData.getData("text")
+          if (!text.includes("\n") && !text.includes(",")) return
+          e.preventDefault()
+          commit(`${draft}${draft && !draft.endsWith("\n") ? "\n" : ""}${text}`)
+        }}
         onKeyDown={(e) => {
-          if (e.key === "Enter" && e.currentTarget.value.trim()) {
+          if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
             e.preventDefault()
-            onChange([...items, e.currentTarget.value.trim()])
-            e.currentTarget.value = ""
+            commit(draft)
           }
         }}
-        className={fieldClass}
+        className={`${fieldClass} min-h-20 resize-y`}
       />
+      <div className="mt-2 flex justify-end">
+        <button
+          type="button"
+          disabled={!draft.trim()}
+          onClick={() => commit(draft)}
+          className="inline-flex cursor-pointer items-center rounded-md border border-outline-variant/30 px-3 py-1.5 font-label text-xs uppercase tracking-widest text-primary disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          Add
+        </button>
+      </div>
     </div>
   )
+}
+
+/** Newlines preferred; commas only when the paste/input is a single line. */
+function parseTagInput(raw: string): string[] {
+  const trimmed = raw.trim()
+  if (!trimmed) return []
+  const parts = trimmed.includes("\n")
+    ? trimmed.split(/\n+/)
+    : trimmed.split(",")
+  return parts.map((part) => part.trim()).filter(Boolean)
 }
 
 export function PrimaryButton({

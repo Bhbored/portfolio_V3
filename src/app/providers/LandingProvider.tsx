@@ -1,4 +1,4 @@
-import type { ReactNode } from "react"
+import type { ReactNode } from "react";
 import {
   createContext,
   useContext,
@@ -6,8 +6,8 @@ import {
   useCallback,
   useMemo,
   useEffect,
-} from "react"
-import { useQuery } from "@tanstack/react-query"
+} from "react";
+import { useQuery } from "@tanstack/react-query";
 import type {
   PersonalInfo,
   Skill,
@@ -16,54 +16,57 @@ import type {
   Certificate,
   Experience,
   Education,
-} from "../shared/types"
+} from "../shared/types";
 import {
   EMPTY_PERSONAL_INFO,
   personalInfoQueries,
-} from "../features/landing/personal-info.service"
+} from "../features/landing/personal-info.service";
 import {
   getSkillsByCategoryId as filterSkillsByCategory,
   skillQueries,
-} from "../features/skills/skills.service"
-import { projectQueries } from "../features/projects/projects.service"
+} from "../features/skills/skills.service";
+import {
+  projectQueries,
+  sortProjectsByHierarchy,
+} from "../features/projects/projects.service";
 import {
   getTop3SkillsByCertificateId as filterTopSkills,
   withCertificateTopSkills,
   certificateQueries,
-} from "../features/certificates/certificates.service"
-import { experienceQueries } from "../features/experience/experiences.service"
-import { educationQueries } from "../features/education/educations.service"
+} from "../features/certificates/certificates.service";
+import { experienceQueries } from "../features/experience/experiences.service";
+import { educationQueries } from "../features/education/educations.service";
 
 interface LandingState {
-  personalInfo: PersonalInfo
-  currentSection: string
-  navigateToSection: (section: string) => void
-  skills: Skill[]
-  categories: SkillCategory[]
-  getSkillsByCategoryId: (id: string) => Skill[]
-  getTop3SkillsByCertificateId: (id: string) => Skill[]
-  projects: Project[]
-  certificates: Certificate[]
-  experiences: Experience[]
-  educations: Education[]
+  personalInfo: PersonalInfo;
+  currentSection: string;
+  navigateToSection: (section: string) => void;
+  skills: Skill[];
+  categories: SkillCategory[];
+  getSkillsByCategoryId: (id: string) => Skill[];
+  getTop3SkillsByCertificateId: (id: string) => Skill[];
+  projects: Project[];
+  certificates: Certificate[];
+  experiences: Experience[];
+  educations: Education[];
 }
 
-const LandingContext = createContext<LandingState | null>(null)
+const LandingContext = createContext<LandingState | null>(null);
 
 export function LandingProvider({
   children,
 }: {
-  readonly children: ReactNode
+  readonly children: ReactNode;
 }) {
-  const [currentSection, setCurrentSection] = useState("Home")
+  const [currentSection, setCurrentSection] = useState("Home");
 
-  const personalInfoQuery = useQuery(personalInfoQueries.detail())
-  const skillsQuery = useQuery(skillQueries.list())
-  const categoriesQuery = useQuery(skillQueries.categories())
-  const projectsQuery = useQuery(projectQueries.list())
-  const certificatesQuery = useQuery(certificateQueries.list())
-  const experiencesQuery = useQuery(experienceQueries.list())
-  const educationsQuery = useQuery(educationQueries.list())
+  const personalInfoQuery = useQuery(personalInfoQueries.detail());
+  const skillsQuery = useQuery(skillQueries.list());
+  const categoriesQuery = useQuery(skillQueries.categories());
+  const projectsQuery = useQuery(projectQueries.list());
+  const certificatesQuery = useQuery(certificateQueries.list());
+  const experiencesQuery = useQuery(experienceQueries.list());
+  const educationsQuery = useQuery(educationQueries.list());
 
   useEffect(() => {
     const errors = [
@@ -74,10 +77,10 @@ export function LandingProvider({
       certificatesQuery.error,
       experiencesQuery.error,
       educationsQuery.error,
-    ].filter(Boolean)
+    ].filter(Boolean);
 
     for (const error of errors) {
-      console.error("[LandingProvider]", error)
+      console.error("[LandingProvider]", error);
     }
   }, [
     personalInfoQuery.error,
@@ -87,7 +90,7 @@ export function LandingProvider({
     certificatesQuery.error,
     experiencesQuery.error,
     educationsQuery.error,
-  ])
+  ]);
 
   useEffect(() => {
     const sectionLabels: Record<string, string> = {
@@ -98,60 +101,63 @@ export function LandingProvider({
       certificates: "Certificates",
       education: "Education",
       contact: "Contact",
-    }
-    const ids = Object.keys(sectionLabels)
+    };
+    const ids = Object.keys(sectionLabels);
 
     const updateActiveSection = () => {
-      const marker = window.innerHeight * 0.35
-      let activeId = ids[0]
+      const marker = window.innerHeight * 0.35;
+      let activeId = ids[0];
 
       for (const id of ids) {
-        const el = document.getElementById(id)
-        if (!el) continue
+        const el = document.getElementById(id);
+        if (!el) continue;
         if (el.getBoundingClientRect().top <= marker) {
-          activeId = id
+          activeId = id;
         }
       }
 
-      setCurrentSection(sectionLabels[activeId] ?? "Home")
-    }
+      setCurrentSection(sectionLabels[activeId] ?? "Home");
+    };
 
-    updateActiveSection()
-    window.addEventListener("scroll", updateActiveSection, { passive: true })
-    window.addEventListener("resize", updateActiveSection)
+    updateActiveSection();
+    window.addEventListener("scroll", updateActiveSection, { passive: true });
+    window.addEventListener("resize", updateActiveSection);
     return () => {
-      window.removeEventListener("scroll", updateActiveSection)
-      window.removeEventListener("resize", updateActiveSection)
-    }
-  }, [])
+      window.removeEventListener("scroll", updateActiveSection);
+      window.removeEventListener("resize", updateActiveSection);
+    };
+  }, []);
 
   const navigateToSection = useCallback((section: string) => {
-    setCurrentSection(section)
-    const el = document.getElementById(section.toLowerCase())
-    if (el) el.scrollIntoView({ behavior: "smooth" })
-  }, [])
+    setCurrentSection(section);
+    const el = document.getElementById(section.toLowerCase());
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  }, []);
 
-  const personalInfo = personalInfoQuery.data ?? EMPTY_PERSONAL_INFO
-  const skills = skillsQuery.data ?? []
-  const categories = categoriesQuery.data ?? []
-  const projects = projectsQuery.data ?? []
-  const experiences = experiencesQuery.data ?? []
-  const educations = educationsQuery.data ?? []
+  const personalInfo = personalInfoQuery.data ?? EMPTY_PERSONAL_INFO;
+  const skills = skillsQuery.data ?? [];
+  const categories = categoriesQuery.data ?? [];
+  const projects = useMemo(
+    () => sortProjectsByHierarchy(projectsQuery.data ?? []),
+    [projectsQuery.data],
+  );
+  const experiences = experiencesQuery.data ?? [];
+  const educations = educationsQuery.data ?? [];
 
   const certificates = useMemo(
     () => withCertificateTopSkills(certificatesQuery.data ?? [], skills),
     [certificatesQuery.data, skills],
-  )
+  );
 
   const getSkillsByCategoryId = useCallback(
     (categoryId: string) => filterSkillsByCategory(skills, categoryId),
     [skills],
-  )
+  );
 
   const getTop3SkillsByCertificateId = useCallback(
     (certificateId: string) => filterTopSkills(skills, certificateId),
     [skills],
-  )
+  );
 
   return (
     <LandingContext.Provider
@@ -171,11 +177,11 @@ export function LandingProvider({
     >
       {children}
     </LandingContext.Provider>
-  )
+  );
 }
 
 export function useLanding(): LandingState {
-  const ctx = useContext(LandingContext)
-  if (!ctx) throw new Error("useLanding must be used within LandingProvider")
-  return ctx
+  const ctx = useContext(LandingContext);
+  if (!ctx) throw new Error("useLanding must be used within LandingProvider");
+  return ctx;
 }

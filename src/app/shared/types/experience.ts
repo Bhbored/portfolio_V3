@@ -1,5 +1,6 @@
+import type { Timestamps } from "./timestamps"
 
-export interface Experience {
+export interface Experience extends Timestamps {
   id?: string
   title: string
   company: string

@@ -1,5 +1,6 @@
+import type { Timestamps } from "./timestamps"
 
-export interface Skill {
+export interface Skill extends Timestamps {
   id: string
   title: string
   icon: number
@@ -10,7 +11,7 @@ export interface Skill {
   details: string[]
 }
 
-export interface SkillCategory {
+export interface SkillCategory extends Timestamps {
   id: string
   category: string
 }

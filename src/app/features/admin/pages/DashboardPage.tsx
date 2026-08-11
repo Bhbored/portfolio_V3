@@ -9,7 +9,10 @@ import {
   Zap,
 } from "lucide-react"
 import { personalInfoQueries } from "../../landing/personal-info.service"
-import { projectQueries } from "../../projects/projects.service"
+import {
+  projectQueries,
+  sortProjectsByHierarchy,
+} from "../../projects/projects.service"
 import { skillQueries } from "../../skills/skills.service"
 import { certificateQueries } from "../../certificates/certificates.service"
 import { experienceQueries } from "../../experience/experiences.service"
@@ -33,7 +36,10 @@ export default function DashboardPage() {
   const experiencesQuery = useQuery(experienceQueries.list())
   const educationsQuery = useQuery(educationQueries.list())
 
-  const projects = projectsQuery.data ?? []
+  const projects = useMemo(
+    () => sortProjectsByHierarchy(projectsQuery.data ?? []),
+    [projectsQuery.data],
+  )
   const skills = skillsQuery.data ?? []
   const categories = categoriesQuery.data ?? []
   const certificates = certificatesQuery.data ?? []

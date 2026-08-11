@@ -1,4 +1,5 @@
 import type { ProficiencyLevel } from "./enums"
+import type { Timestamps } from "./timestamps"
 
 export interface SocialLinks {
   github: string
@@ -10,7 +11,7 @@ export interface Language {
   proficiency: ProficiencyLevel
 }
 
-export interface PersonalInfo {
+export interface PersonalInfo extends Timestamps {
   id?: string
   name: string
   title: string

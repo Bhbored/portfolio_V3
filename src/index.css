@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;700&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -51,7 +51,10 @@ body {
 }
 
 @utility grid-pattern {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 1px
+  );
   background-size: 30px 30px;
 }
 
@@ -80,7 +83,9 @@ body {
 
 @utility scrollbar-none {
   scrollbar-width: none;
-  &::-webkit-scrollbar { display: none; }
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @utility perspective-1000 {
@@ -99,72 +104,170 @@ body {
   transform: rotateY(180deg);
 }
 
-@utility anim-d-0 { animation-delay: 0ms; }
-@utility anim-d-50 { animation-delay: 50ms; }
-@utility anim-d-100 { animation-delay: 100ms; }
-@utility anim-d-150 { animation-delay: 150ms; }
-@utility anim-d-200 { animation-delay: 200ms; }
-@utility anim-d-250 { animation-delay: 250ms; }
-@utility anim-d-300 { animation-delay: 300ms; }
-@utility anim-d-350 { animation-delay: 350ms; }
-@utility anim-d-400 { animation-delay: 400ms; }
-@utility anim-d-450 { animation-delay: 450ms; }
-@utility anim-d-500 { animation-delay: 500ms; }
-@utility anim-d-550 { animation-delay: 550ms; }
-@utility anim-d-600 { animation-delay: 600ms; }
-@utility anim-d-650 { animation-delay: 650ms; }
-@utility anim-d-700 { animation-delay: 700ms; }
-@utility anim-d-750 { animation-delay: 750ms; }
-@utility anim-d-800 { animation-delay: 800ms; }
-@utility anim-d-850 { animation-delay: 850ms; }
-@utility anim-d-900 { animation-delay: 900ms; }
-@utility anim-d-950 { animation-delay: 950ms; }
-@utility anim-d-1000 { animation-delay: 1000ms; }
-@utility anim-d-1100 { animation-delay: 1100ms; }
-@utility anim-d-1200 { animation-delay: 1200ms; }
-@utility anim-d-1400 { animation-delay: 1400ms; }
-@utility anim-d-1600 { animation-delay: 1600ms; }
-@utility anim-d-1800 { animation-delay: 1800ms; }
+@utility anim-d-0 {
+  animation-delay: 0ms;
+}
+@utility anim-d-50 {
+  animation-delay: 50ms;
+}
+@utility anim-d-100 {
+  animation-delay: 100ms;
+}
+@utility anim-d-150 {
+  animation-delay: 150ms;
+}
+@utility anim-d-200 {
+  animation-delay: 200ms;
+}
+@utility anim-d-250 {
+  animation-delay: 250ms;
+}
+@utility anim-d-300 {
+  animation-delay: 300ms;
+}
+@utility anim-d-350 {
+  animation-delay: 350ms;
+}
+@utility anim-d-400 {
+  animation-delay: 400ms;
+}
+@utility anim-d-450 {
+  animation-delay: 450ms;
+}
+@utility anim-d-500 {
+  animation-delay: 500ms;
+}
+@utility anim-d-550 {
+  animation-delay: 550ms;
+}
+@utility anim-d-600 {
+  animation-delay: 600ms;
+}
+@utility anim-d-650 {
+  animation-delay: 650ms;
+}
+@utility anim-d-700 {
+  animation-delay: 700ms;
+}
+@utility anim-d-750 {
+  animation-delay: 750ms;
+}
+@utility anim-d-800 {
+  animation-delay: 800ms;
+}
+@utility anim-d-850 {
+  animation-delay: 850ms;
+}
+@utility anim-d-900 {
+  animation-delay: 900ms;
+}
+@utility anim-d-950 {
+  animation-delay: 950ms;
+}
+@utility anim-d-1000 {
+  animation-delay: 1000ms;
+}
+@utility anim-d-1100 {
+  animation-delay: 1100ms;
+}
+@utility anim-d-1200 {
+  animation-delay: 1200ms;
+}
+@utility anim-d-1400 {
+  animation-delay: 1400ms;
+}
+@utility anim-d-1600 {
+  animation-delay: 1600ms;
+}
+@utility anim-d-1800 {
+  animation-delay: 1800ms;
+}
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-30px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fadeInLeft {
-  from { opacity: 0; transform: translateX(-50px); }
-  to { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes fadeInRight {
-  from { opacity: 0; transform: translateX(50px); }
-  to { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes shimmer {
-  0% { background-position: -1000px 0; }
-  100% { background-position: 1000px 0; }
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-4px); }
-  75% { transform: translateX(4px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -3,11 +3,13 @@ import { supabase } from "../../shared/api/supabase"
 import {
   STALE_TIME,
   asStringArray,
+  asTimestamp,
+  stripTimestamps,
   throwIfError,
 } from "../../shared/api/supabase-utils"
-import type { Experience } from "../../shared/types"
+import type { Experience, Writable } from "../../shared/types"
 
-export type NewExperience = Omit<Experience, "id">
+export type NewExperience = Writable<Experience>
 
 export const experienceKeys = {
   all: ["experiences"] as const,
@@ -19,11 +21,16 @@ function normalizeExperience(row: Experience): Experience {
     ...row,
     period: row.period ?? "",
     description: asStringArray(row.description),
+    created_at: asTimestamp(row.created_at),
+    updated_at: asTimestamp(row.updated_at),
   }
 }
 
 export async function fetchExperiences(): Promise<Experience[]> {
-  const result = await supabase.from("experiences").select("*")
+  const result = await supabase
+    .from("experiences")
+    .select("*")
+    .order("created_at", { ascending: false })
   const rows = await throwIfError(result, "experiences")
   return ((rows ?? []) as Experience[]).map(normalizeExperience)
 }
@@ -33,7 +40,7 @@ export async function createExperience(
 ): Promise<Experience> {
   const result = await supabase
     .from("experiences")
-    .insert(row)
+    .insert(stripTimestamps(row))
     .select()
     .single()
   const data = await throwIfError(result, "experiences.create")
@@ -46,7 +53,7 @@ export async function updateExperience(
 ): Promise<Experience> {
   const result = await supabase
     .from("experiences")
-    .update(row)
+    .update(stripTimestamps(row))
     .eq("id", id)
     .select()
     .single()

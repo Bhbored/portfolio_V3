@@ -6,6 +6,7 @@ import type {
   SocialLinks,
   Language,
   ProficiencyLevel,
+  Writable,
 } from "../../shared/types"
 
 export const personalInfoKeys = {
@@ -25,6 +26,8 @@ export const EMPTY_PERSONAL_INFO: PersonalInfo = {
   is_available_for_work: false,
   social: { github: "", linkedin: "" },
   languages: [],
+  created_at: "",
+  updated_at: "",
 }
 
 function asSocial(value: unknown): SocialLinks {
@@ -59,10 +62,12 @@ function normalizePersonalInfo(row: PersonalInfo): PersonalInfo {
     is_available_for_work: row.is_available_for_work ?? false,
     social: asSocial(row.social),
     languages: asLanguages(row.languages),
+    created_at: row.created_at ?? "",
+    updated_at: row.updated_at ?? "",
   }
 }
 
-function toPersonalInfoPayload(patch: Omit<PersonalInfo, "id">) {
+function toPersonalInfoPayload(patch: Writable<PersonalInfo>) {
   return {
     name: patch.name,
     title: patch.title,
@@ -91,7 +96,7 @@ export async function fetchPersonalInfo(): Promise<PersonalInfo> {
 }
 
 export async function createPersonalInfo(
-  patch: Omit<PersonalInfo, "id">,
+  patch: Writable<PersonalInfo>,
 ): Promise<PersonalInfo> {
   const result = await supabase
     .from("personal_info")
@@ -104,7 +109,7 @@ export async function createPersonalInfo(
 
 export async function updatePersonalInfo(
   id: string,
-  patch: Omit<PersonalInfo, "id">,
+  patch: Writable<PersonalInfo>,
 ): Promise<PersonalInfo> {
   const result = await supabase
     .from("personal_info")

@@ -1,9 +1,14 @@
 import { queryOptions } from "@tanstack/react-query"
 import { supabase } from "../../shared/api/supabase"
-import { STALE_TIME, throwIfError } from "../../shared/api/supabase-utils"
-import type { Education } from "../../shared/types"
+import {
+  STALE_TIME,
+  asTimestamp,
+  stripTimestamps,
+  throwIfError,
+} from "../../shared/api/supabase-utils"
+import type { Education, Writable } from "../../shared/types"
 
-export type NewEducation = Omit<Education, "id">
+export type NewEducation = Writable<Education>
 
 export const educationKeys = {
   all: ["educations"] as const,
@@ -14,17 +19,26 @@ function normalizeEducation(row: Education): Education {
   return {
     ...row,
     year: row.year ?? "",
+    created_at: asTimestamp(row.created_at),
+    updated_at: asTimestamp(row.updated_at),
   }
 }
 
 export async function fetchEducations(): Promise<Education[]> {
-  const result = await supabase.from("educations").select("*")
+  const result = await supabase
+    .from("educations")
+    .select("*")
+    .order("created_at", { ascending: false })
   const rows = await throwIfError(result, "educations")
   return ((rows ?? []) as Education[]).map(normalizeEducation)
 }
 
 export async function createEducation(row: NewEducation): Promise<Education> {
-  const result = await supabase.from("educations").insert(row).select().single()
+  const result = await supabase
+    .from("educations")
+    .insert(stripTimestamps(row))
+    .select()
+    .single()
   const data = await throwIfError(result, "educations.create")
   return normalizeEducation(data as Education)
 }
@@ -35,7 +49,7 @@ export async function updateEducation(
 ): Promise<Education> {
   const result = await supabase
     .from("educations")
-    .update(row)
+    .update(stripTimestamps(row))
     .eq("id", id)
     .select()
     .single()

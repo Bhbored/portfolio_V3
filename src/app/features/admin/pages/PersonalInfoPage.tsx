@@ -40,7 +40,7 @@ export default function PersonalInfoPage() {
 
   const save = useMutation({
     mutationFn: () => {
-      const { id, ...payload } = form
+      const { id, created_at: _c, updated_at: _u, ...payload } = form
       return id ? updatePersonalInfo(id, payload) : createPersonalInfo(payload)
     },
     onSuccess: async () => {

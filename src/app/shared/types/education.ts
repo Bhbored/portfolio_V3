@@ -1,5 +1,6 @@
+import type { Timestamps } from "./timestamps"
 
-export interface Education {
+export interface Education extends Timestamps {
   id: string
   title: string
   issuer: string

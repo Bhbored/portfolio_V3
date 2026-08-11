@@ -1,6 +1,7 @@
 import type { Skill } from "./skill"
+import type { Timestamps } from "./timestamps"
 
-export interface Certificate {
+export interface Certificate extends Timestamps {
   id: string
   title: string
   issuer: string

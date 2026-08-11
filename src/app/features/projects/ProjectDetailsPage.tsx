@@ -91,7 +91,7 @@ export default function ProjectDetailsPage() {
         </div>
       )}
 
-      
+
       <div className="relative z-20 -mt-20 px-4 sm:-mt-24 sm:px-6 md:-mt-32 md:px-12">
         <div className="mx-auto max-w-7xl">
           {imageSrc && (
@@ -128,7 +128,7 @@ export default function ProjectDetailsPage() {
             </p>
           </div>
 
-          
+
           <div className="flex flex-wrap gap-4 md:gap-6 pb-8 border-b border-white/10">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
@@ -251,7 +251,7 @@ export default function ProjectDetailsPage() {
         </div>
       </div>
 
-      
+
       <div className="relative z-20 px-4 py-10 sm:px-6 sm:py-12 md:px-12 md:py-16">
         <div className="mx-auto max-w-7xl">
           {screenshots.length > 0 && (
@@ -266,7 +266,7 @@ export default function ProjectDetailsPage() {
             </div>
           )}
 
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-8 items-stretch">
             <div className="flex flex-col gap-8">
               {project.technologies.length > 0 && (

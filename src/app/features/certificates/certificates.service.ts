@@ -1,10 +1,15 @@
 import { queryOptions } from "@tanstack/react-query"
 import { supabase } from "../../shared/api/supabase"
-import { STALE_TIME, throwIfError } from "../../shared/api/supabase-utils"
-import type { Certificate, Skill } from "../../shared/types"
+import {
+  STALE_TIME,
+  asTimestamp,
+  stripTimestamps,
+  throwIfError,
+} from "../../shared/api/supabase-utils"
+import type { Certificate, Skill, Writable } from "../../shared/types"
 
 export type CertificateRow = Omit<Certificate, "top_skills">
-export type NewCertificate = Omit<CertificateRow, "id">
+export type NewCertificate = Writable<CertificateRow>
 
 export const certificateKeys = {
   all: ["certificates"] as const,
@@ -16,11 +21,16 @@ function normalizeCertificate(row: CertificateRow): CertificateRow {
     ...row,
     year: row.year ?? "",
     link: row.link ?? null,
+    created_at: asTimestamp(row.created_at),
+    updated_at: asTimestamp(row.updated_at),
   }
 }
 
 export async function fetchCertificates(): Promise<CertificateRow[]> {
-  const result = await supabase.from("certificates").select("*")
+  const result = await supabase
+    .from("certificates")
+    .select("*")
+    .order("created_at", { ascending: false })
   const rows = await throwIfError(result, "certificates")
   return ((rows ?? []) as CertificateRow[]).map(normalizeCertificate)
 }
@@ -30,7 +40,7 @@ export async function createCertificate(
 ): Promise<CertificateRow> {
   const result = await supabase
     .from("certificates")
-    .insert(row)
+    .insert(stripTimestamps(row))
     .select()
     .single()
   const data = await throwIfError(result, "certificates.create")
@@ -43,7 +53,7 @@ export async function updateCertificate(
 ): Promise<CertificateRow> {
   const result = await supabase
     .from("certificates")
-    .update(row)
+    .update(stripTimestamps(row))
     .eq("id", id)
     .select()
     .single()

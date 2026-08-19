@@ -10,7 +10,11 @@ import {
   updateProject,
 } from "../../projects/projects.service";
 import { getProjectCategoryName } from "../../../../lib/project-category";
-import { ProjectCategory, type Project, type Writable } from "../../../shared/types";
+import {
+  ProjectCategory,
+  type Project,
+  type Writable,
+} from "../../../shared/types";
 import SidePannel from "../../../shared/components/SidePannel";
 import Dialog from "../../../shared/components/Dialog";
 import { useToast } from "../../../shared/components/Toast";
@@ -71,12 +75,12 @@ function ProjectForm({
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/(^-|-$)/g, "") || "projects";
-  const hierarchyOptions = Array.from({ length: maxHierarchy }, (_, i) => i + 1);
+  const hierarchyOptions = Array.from(
+    { length: maxHierarchy },
+    (_, i) => i + 1,
+  );
   const swapWith = projects.find(
-    (p) =>
-      p.id &&
-      p.id !== editingId &&
-      p.hierarchy === value.hierarchy,
+    (p) => p.id && p.id !== editingId && p.hierarchy === value.hierarchy,
   );
   return (
     <div className="space-y-5">
@@ -128,7 +132,8 @@ function ProjectForm({
               {editingId ? (
                 <>
                   {" "}
-                  (they take #{projects.find((p) => p.id === editingId)?.hierarchy ?? "—"})
+                  (they take #
+                  {projects.find((p) => p.id === editingId)?.hierarchy ?? "—"})
                 </>
               ) : (
                 <> (they move to #{maxHierarchy})</>
@@ -291,7 +296,9 @@ export default function ProjectsPage() {
             <tbody>
               {rows.map((project) => (
                 <tr key={project.id} className={rowClass}>
-                  <td className={`${tdClass} tabular-nums`}>{project.hierarchy}</td>
+                  <td className={`${tdClass} tabular-nums`}>
+                    {project.hierarchy}
+                  </td>
                   <td className={tdClass}>
                     {project.image_url ? (
                       <MediaImage

@@ -67,8 +67,14 @@ export default function SkillCard({ skill, index }: SkillCardProps) {
         </div>
 
         {expanded && skill.details.length > 0 && (
-          <div className="mt-4 md:mt-6 pt-4 md:pt-6 border-t border-outline-variant/20">
-            <ul className="space-y-2 md:space-y-3">
+          <div className="mt-4 border-t border-outline-variant/20 pt-4 md:mt-6 md:pt-6">
+              <ul
+                className="max-h-28 space-y-2 overflow-y-auto pr-2 md:max-h-32 md:space-y-3 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-primary/60 [&::-webkit-scrollbar-track]:bg-white/10"
+                style={{
+                  scrollbarWidth: "thin",
+                  scrollbarColor: "rgba(0, 229, 255, 0.45) rgba(255, 255, 255, 0.08)",
+                }}
+              >
               {skill.details.map((detail: string, i: number) => (
                 <li
                   key={i}
@@ -90,7 +96,7 @@ export default function SkillCard({ skill, index }: SkillCardProps) {
                   <span>{detail}</span>
                 </li>
               ))}
-            </ul>
+              </ul>
           </div>
         )}
       </div>

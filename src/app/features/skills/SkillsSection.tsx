@@ -103,7 +103,7 @@ export default function SkillsSection() {
               )}
             </div>
 
-            <div className="overflow-hidden">
+            <div className="overflow-x-hidden overflow-y-visible py-2">
               <div
                 className="flex transition-transform duration-500 ease-in-out"
                 style={{ transform: `translateX(-${currentPage * 100}%)` }}

@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react"
-import { X } from "lucide-react"
+import { ChevronDown, X } from "lucide-react"
 
 const fieldClass =
   "w-full rounded-md border border-outline-variant/40 bg-surface-container-low/40 px-3 py-3 font-body text-sm text-on-surface placeholder:text-on-surface-variant focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"
@@ -82,13 +82,16 @@ export function SelectField({
   return (
     <label className="block">
       <FieldLabel>{label}</FieldLabel>
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className={fieldClass}
-      >
-        {children}
-      </select>
+      <div className="relative">
+        <select
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className={`${fieldClass} cursor-pointer appearance-none bg-surface-container-highest/70 pr-10`}
+        >
+          {children}
+        </select>
+        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-on-surface-variant" />
+      </div>
     </label>
   )
 }

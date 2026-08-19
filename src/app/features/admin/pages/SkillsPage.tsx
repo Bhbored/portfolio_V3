@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import {
@@ -56,6 +56,8 @@ function SkillForm({
   onUseNextPriority: () => void;
 }>) {
   const [search, setSearch] = useState("");
+  const [iconMenuOpen, setIconMenuOpen] = useState(false);
+  const iconMenuRef = useRef<HTMLDivElement>(null);
   const options = useMemo(
     () =>
       getIconOptions().filter((option) =>
@@ -64,10 +66,24 @@ function SkillForm({
     [search],
   );
   const Icon = getIcon(value.icon);
+  const selectedIconName =
+    getIconOptions().find((option) => option.id === value.icon)?.name ??
+    "Select icon";
   const change = <K extends keyof Writable<Skill>>(
     key: K,
     item: Writable<Skill>[K],
   ) => onChange({ ...value, [key]: item });
+  useEffect(() => {
+    if (!iconMenuOpen) return;
+    const handlePointerDown = (event: MouseEvent) => {
+      if (!iconMenuRef.current) return;
+      if (!iconMenuRef.current.contains(event.target as Node)) {
+        setIconMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handlePointerDown);
+    return () => document.removeEventListener("mousedown", handlePointerDown);
+  }, [iconMenuOpen]);
   return (
     <div className="space-y-5">
       <TextField
@@ -87,17 +103,56 @@ function SkillForm({
           <div className="flex items-center gap-2 text-sm text-primary">
             <Icon className="size-4" /> Selected icon
           </div>
-          <SelectField
-            label="Icon"
-            value={value.icon}
-            onChange={(item) => change("icon", Number(item))}
-          >
-            {options.map((option) => (
-              <option key={option.id} value={option.id}>
-                {option.name}
-              </option>
-            ))}
-          </SelectField>
+          <div ref={iconMenuRef} className="relative">
+            <label className="block">
+              <span className="mb-2 block font-label text-xs uppercase tracking-widest text-on-surface-variant">
+                Icon
+              </span>
+              <button
+                type="button"
+                onClick={() => setIconMenuOpen((open) => !open)}
+                className="flex w-full cursor-pointer items-center justify-between rounded-md border border-outline-variant/40 bg-surface-container-highest/70 px-3 py-3 text-left font-body text-sm text-on-surface focus:outline-none focus:ring-1 focus:ring-primary/30"
+              >
+                <span className="inline-flex items-center gap-2">
+                  <Icon className="size-4" />
+                  {selectedIconName}
+                </span>
+                <span className="text-on-surface-variant">▼</span>
+              </button>
+            </label>
+            {iconMenuOpen ? (
+              <div className="absolute z-20 mt-2 max-h-56 w-full overflow-y-auto rounded-md border border-outline-variant/40 bg-surface-container-high shadow-lg">
+                {options.length === 0 ? (
+                  <p className="px-3 py-2 text-sm text-on-surface-variant">
+                    No icons found.
+                  </p>
+                ) : (
+                  options.map((option) => {
+                    const OptionIcon = getIcon(option.id);
+                    const selected = option.id === value.icon;
+                    return (
+                      <button
+                        key={option.id}
+                        type="button"
+                        onClick={() => {
+                          change("icon", option.id);
+                          setIconMenuOpen(false);
+                        }}
+                        className={`flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-left text-sm transition-colors ${
+                          selected
+                            ? "bg-primary/15 text-primary"
+                            : "text-on-surface hover:bg-surface-container-highest"
+                        }`}
+                      >
+                        <OptionIcon className="size-4 shrink-0" />
+                        <span>{option.name}</span>
+                      </button>
+                    );
+                  })
+                )}
+              </div>
+            ) : null}
+          </div>
         </div>
         <SelectField
           label="Category"
@@ -201,6 +256,13 @@ export default function SkillsPage() {
     id: string;
     label: string;
   } | null>(null);
+  const closePanel = useCallback(() => setPanelOpen(false), []);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [certificateFilter, setCertificateFilter] = useState<
+    "all" | "with" | "without"
+  >("all");
+  const [newFilter, setNewFilter] = useState<"all" | "new" | "not-new">("all");
   const nextPriority = useMemo(() => {
     if (!draft.skill_category_id) return 1;
     const maxInCategory = skills
@@ -220,7 +282,7 @@ export default function SkillsPage() {
       await invalidate();
       toast.success({ title: "Skill created" });
       setPanelOpen(false);
-      setPage(Math.max(1, Math.ceil((skills.length + 1) / PAGE_SIZE)));
+      setPage(1);
     },
     onError: (error) =>
       toast.error({
@@ -234,7 +296,7 @@ export default function SkillsPage() {
     onSuccess: async () => {
       await invalidate();
       toast.success({ title: "Skill updated" });
-      setPanelOpen(false);
+      closePanel();
     },
     onError: (error) =>
       toast.error({
@@ -248,8 +310,6 @@ export default function SkillsPage() {
       await invalidate();
       toast.success({ title: "Skill deleted" });
       setDeleteTarget(null);
-      if (skills.length - 1 <= (page - 1) * PAGE_SIZE && page > 1)
-        setPage(page - 1);
     },
     onError: (error) =>
       toast.error({
@@ -257,7 +317,45 @@ export default function SkillsPage() {
         description: error instanceof Error ? error.message : "Unknown error",
       }),
   });
-  const rows = skills.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const filteredSkills = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+    return skills.filter((skill) => {
+      const categoryName =
+        categories.find((category) => category.id === skill.skill_category_id)
+          ?.category ?? "";
+      const matchesSearch =
+        !term ||
+        skill.title.toLowerCase().includes(term) ||
+        categoryName.toLowerCase().includes(term) ||
+        skill.details.some((detail) => detail.toLowerCase().includes(term));
+      const matchesCategory =
+        !categoryFilter || skill.skill_category_id === categoryFilter;
+      const matchesCertificate =
+        certificateFilter === "all" ||
+        (certificateFilter === "with" && Boolean(skill.certificate_id)) ||
+        (certificateFilter === "without" && !skill.certificate_id);
+      const matchesNew =
+        newFilter === "all" ||
+        (newFilter === "new" && skill.is_new) ||
+        (newFilter === "not-new" && !skill.is_new);
+      return (
+        matchesSearch && matchesCategory && matchesCertificate && matchesNew
+      );
+    });
+  }, [skills, categories, searchTerm, categoryFilter, certificateFilter, newFilter]);
+  const rows = filteredSkills.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm, categoryFilter, certificateFilter, newFilter]);
+  useEffect(() => {
+    const totalPages = Math.max(1, Math.ceil(filteredSkills.length / PAGE_SIZE));
+    if (page > totalPages) setPage(totalPages);
+  }, [filteredSkills.length, page]);
+  const hasActiveFilters =
+    searchTerm.trim().length > 0 ||
+    categoryFilter.length > 0 ||
+    certificateFilter !== "all" ||
+    newFilter !== "all";
   const save = () =>
     mode === "create"
       ? create.mutate()
@@ -286,6 +384,63 @@ export default function SkillsPage() {
           </PrimaryButton>
         }
       />
+      <DataTableShell>
+        <div className="grid gap-4 border-b border-white/10 px-4 py-4 sm:grid-cols-2 lg:grid-cols-5">
+          <TextField
+            label="Search"
+            value={searchTerm}
+            onChange={setSearchTerm}
+            placeholder="Title, category, details..."
+          />
+          <SelectField
+            label="Category"
+            value={categoryFilter}
+            onChange={setCategoryFilter}
+          >
+            <option value="">All categories</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.category}
+              </option>
+            ))}
+          </SelectField>
+          <SelectField
+            label="Certificate"
+            value={certificateFilter}
+            onChange={(value) =>
+              setCertificateFilter(value as "all" | "with" | "without")
+            }
+          >
+            <option value="all">All</option>
+            <option value="with">With certificate</option>
+            <option value="without">Without certificate</option>
+          </SelectField>
+          <SelectField
+            label="Status"
+            value={newFilter}
+            onChange={(value) =>
+              setNewFilter(value as "all" | "new" | "not-new")
+            }
+          >
+            <option value="all">All</option>
+            <option value="new">New only</option>
+            <option value="not-new">Not new</option>
+          </SelectField>
+          <div className="flex items-end">
+            <SecondaryButton
+              disabled={!hasActiveFilters}
+              onClick={() => {
+                setSearchTerm("");
+                setCategoryFilter("");
+                setCertificateFilter("all");
+                setNewFilter("all");
+              }}
+            >
+              Clear filters
+            </SecondaryButton>
+          </div>
+        </div>
+      </DataTableShell>
       <DataTableShell>
         <div className="overflow-x-auto">
           <table className="w-full min-w-225 text-left">
@@ -365,7 +520,7 @@ export default function SkillsPage() {
                     colSpan={8}
                     className={`${tdClass} py-8 text-center text-on-surface-variant`}
                   >
-                    No skills yet.
+                    No skills match current filters.
                   </td>
                 </tr>
               ) : null}
@@ -376,19 +531,19 @@ export default function SkillsPage() {
           <PaginationControls
             currentPage={page}
             pageSize={PAGE_SIZE}
-            totalItems={skills.length}
+            totalItems={filteredSkills.length}
             onPageChange={setPage}
           />
         </div>
       </DataTableShell>
       <SidePannel
         open={panelOpen}
-        onClose={() => setPanelOpen(false)}
+        onClose={closePanel}
         title={mode === "create" ? "Add skill" : "Edit skill"}
         widthClassName="w-full max-w-xl"
         footer={
           <div className="flex justify-end gap-3">
-            <SecondaryButton onClick={() => setPanelOpen(false)}>
+            <SecondaryButton onClick={closePanel}>
               Cancel
             </SecondaryButton>
             <PrimaryButton

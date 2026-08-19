@@ -4,6 +4,7 @@ export interface Skill extends Timestamps {
   id: string
   title: string
   icon: number
+  priority: number
   skill_category_id: string | null
   certificate_id: string | null
   mastery_level: number

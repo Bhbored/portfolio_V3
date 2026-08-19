@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import {
@@ -26,13 +26,17 @@ import {
   tdClass,
   rowClass,
 } from "../components/AdminForm";
+
 const PAGE_SIZE = 10;
-const blank = (): Writable<CertificateRow> => ({
+
+const emptyCertificate = (): Writable<CertificateRow> => ({
   title: "",
   issuer: "",
   year: "",
   link: null,
+  priority: 1,
 });
+
 export default function CertificatesPage() {
   const client = useQueryClient();
   const toast = useToast();
@@ -41,12 +45,19 @@ export default function CertificatesPage() {
   const [page, setPage] = useState(1);
   const [panelOpen, setPanelOpen] = useState(false);
   const [mode, setMode] = useState<"create" | "edit">("create");
-  const [draft, setDraft] = useState<Writable<CertificateRow>>(blank);
+  const [draft, setDraft] = useState<Writable<CertificateRow>>(emptyCertificate);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<{
     id: string;
     label: string;
   } | null>(null);
+  const closePanel = useCallback(() => setPanelOpen(false), []);
+  const nextPriority = useMemo(() => {
+    const maxPriority = certificates
+      .filter((certificate) => certificate.id !== editingId)
+      .reduce((max, certificate) => Math.max(max, certificate.priority), 0);
+    return maxPriority + 1;
+  }, [certificates, editingId]);
   const invalidate = () =>
     client.invalidateQueries({ queryKey: certificateKeys.all });
   const fail = (error: unknown) =>
@@ -59,7 +70,8 @@ export default function CertificatesPage() {
     onSuccess: async () => {
       await invalidate();
       toast.success({ title: "Certificate created" });
-      setPanelOpen(false);
+      closePanel();
+      setPage(1);
     },
     onError: fail,
   });
@@ -71,7 +83,7 @@ export default function CertificatesPage() {
     onSuccess: async () => {
       await invalidate();
       toast.success({ title: "Certificate updated" });
-      setPanelOpen(false);
+      closePanel();
     },
     onError: fail,
   });
@@ -89,47 +101,26 @@ export default function CertificatesPage() {
       }),
   });
   const rows = certificates.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  const fields = (
-    <div className="space-y-5">
-      <TextField
-        label="Title"
-        value={draft.title}
-        onChange={(value) => setDraft({ ...draft, title: value })}
-        required
-      />
-      <TextField
-        label="Issuer"
-        value={draft.issuer}
-        onChange={(value) => setDraft({ ...draft, issuer: value })}
-        required
-      />
-      <TextField
-        label="Year"
-        value={draft.year}
-        onChange={(value) => setDraft({ ...draft, year: value })}
-      />
-      <TextField
-        label="Link"
-        type="url"
-        value={draft.link ?? ""}
-        onChange={(value) => setDraft({ ...draft, link: value || null })}
-      />
-    </div>
-  );
+  const openCreate = () => {
+    setMode("create");
+    setDraft(emptyCertificate());
+    setEditingId(null);
+    setPanelOpen(true);
+  };
+  const openEdit = (row: CertificateRow) => {
+    const { id, created_at: _c, updated_at: _u, ...item } = row;
+    setMode("edit");
+    setEditingId(id);
+    setDraft(item);
+    setPanelOpen(true);
+  };
   return (
     <div className="space-y-6">
       <PageHeader
         title="Certificates"
-        description="Manage certifications and linked skills."
+        description="Manage certifications, linked skills, and display order."
         action={
-          <PrimaryButton
-            onClick={() => {
-              setMode("create");
-              setDraft(blank());
-              setEditingId(null);
-              setPanelOpen(true);
-            }}
-          >
+          <PrimaryButton onClick={openCreate}>
             <Plus className="size-4" /> Add certificate
           </PrimaryButton>
         }
@@ -140,6 +131,7 @@ export default function CertificatesPage() {
             <thead>
               <tr className="border-b border-white/10">
                 {[
+                  "Priority",
                   "Title",
                   "Issuer",
                   "Year",
@@ -156,6 +148,7 @@ export default function CertificatesPage() {
             <tbody>
               {rows.map((row) => (
                 <tr key={row.id} className={rowClass}>
+                  <td className={`${tdClass} tabular-nums`}>{row.priority}</td>
                   <td className={tdClass}>{row.title}</td>
                   <td className={tdClass}>{row.issuer}</td>
                   <td className={tdClass}>{row.year}</td>
@@ -182,18 +175,7 @@ export default function CertificatesPage() {
                     <button
                       type="button"
                       className="mr-2 cursor-pointer text-primary"
-                      onClick={() => {
-                        const {
-                          id,
-                          created_at: _c,
-                          updated_at: _u,
-                          ...item
-                        } = row;
-                        setMode("edit");
-                        setEditingId(id);
-                        setDraft(item);
-                        setPanelOpen(true);
-                      }}
+                      onClick={() => openEdit(row)}
                       aria-label={`Edit ${row.title}`}
                     >
                       <Pencil className="size-4" />
@@ -214,7 +196,7 @@ export default function CertificatesPage() {
               {rows.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={6}
+                    colSpan={7}
                     className={`${tdClass} py-8 text-center text-on-surface-variant`}
                   >
                     No certificates yet.
@@ -235,14 +217,12 @@ export default function CertificatesPage() {
       </DataTableShell>
       <SidePannel
         open={panelOpen}
-        onClose={() => setPanelOpen(false)}
+        onClose={closePanel}
         title={mode === "create" ? "Add certificate" : "Edit certificate"}
         widthClassName="w-full max-w-xl"
         footer={
           <div className="flex justify-end gap-3">
-            <SecondaryButton onClick={() => setPanelOpen(false)}>
-              Cancel
-            </SecondaryButton>
+            <SecondaryButton onClick={closePanel}>Cancel</SecondaryButton>
             <PrimaryButton
               onClick={() =>
                 mode === "create" ? create.mutate() : update.mutate()
@@ -254,7 +234,61 @@ export default function CertificatesPage() {
           </div>
         }
       >
-        {fields}
+        <div className="space-y-5">
+          <TextField
+            label="Title"
+            value={draft.title}
+            onChange={(value) => setDraft({ ...draft, title: value })}
+            required
+          />
+          <TextField
+            label="Issuer"
+            value={draft.issuer}
+            onChange={(value) => setDraft({ ...draft, issuer: value })}
+            required
+          />
+          <TextField
+            label="Year"
+            value={draft.year}
+            onChange={(value) => setDraft({ ...draft, year: value })}
+          />
+          <TextField
+            label="Link"
+            type="url"
+            value={draft.link ?? ""}
+            onChange={(value) => setDraft({ ...draft, link: value || null })}
+          />
+          <label className="block">
+            <span className="mb-2 block font-label text-xs uppercase tracking-widest text-on-surface-variant">
+              Priority
+            </span>
+            <input
+              className="w-full rounded-md border border-outline-variant/40 bg-surface-container-low/40 px-3 py-3 font-body text-sm text-on-surface placeholder:text-on-surface-variant focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"
+              type="number"
+              min={1}
+              step={1}
+              value={draft.priority}
+              onChange={(event) =>
+                setDraft({
+                  ...draft,
+                  priority: Math.max(1, Number(event.target.value) || 1),
+                })
+              }
+            />
+            <div className="mt-2 flex items-center justify-between gap-3">
+              <p className="text-xs text-on-surface-variant">
+                Next available priority: {nextPriority}
+              </p>
+              <button
+                type="button"
+                onClick={() => setDraft({ ...draft, priority: nextPriority })}
+                className="cursor-pointer font-label text-xs uppercase tracking-widest text-primary hover:text-secondary"
+              >
+                Use next
+              </button>
+            </div>
+          </label>
+        </div>
       </SidePannel>
       <Dialog
         open={deleteTarget !== null}

@@ -5,5 +5,6 @@ export interface Experience extends Timestamps {
   title: string
   company: string
   period: string
+  priority: number
   description: string[]
 }

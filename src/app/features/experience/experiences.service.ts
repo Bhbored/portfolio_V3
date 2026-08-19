@@ -20,6 +20,7 @@ function normalizeExperience(row: Experience): Experience {
   return {
     ...row,
     period: row.period ?? "",
+    priority: Number(row.priority ?? 1),
     description: asStringArray(row.description),
     created_at: asTimestamp(row.created_at),
     updated_at: asTimestamp(row.updated_at),
@@ -30,6 +31,7 @@ export async function fetchExperiences(): Promise<Experience[]> {
   const result = await supabase
     .from("experiences")
     .select("*")
+    .order("priority", { ascending: true })
     .order("created_at", { ascending: false })
   const rows = await throwIfError(result, "experiences")
   return ((rows ?? []) as Experience[]).map(normalizeExperience)

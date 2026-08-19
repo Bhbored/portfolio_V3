@@ -1,5 +1,5 @@
-import { useMemo } from "react"
-import { useQuery } from "@tanstack/react-query"
+import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   BadgeCheck,
   Briefcase,
@@ -7,45 +7,45 @@ import {
   History,
   Layers,
   Zap,
-} from "lucide-react"
-import { personalInfoQueries } from "../../landing/personal-info.service"
+} from "lucide-react";
+import { personalInfoQueries } from "../../landing/personal-info.service";
 import {
   projectQueries,
   sortProjectsByHierarchy,
-} from "../../projects/projects.service"
-import { skillQueries } from "../../skills/skills.service"
-import { certificateQueries } from "../../certificates/certificates.service"
-import { experienceQueries } from "../../experience/experiences.service"
-import { educationQueries } from "../../education/educations.service"
-import WelcomeStrip from "../components/dashboard/WelcomeStrip"
-import StatStrip from "../components/dashboard/StatStrip"
-import type { StatItem } from "../components/dashboard/StatStrip"
-import ContentHealth from "../components/dashboard/ContentHealth"
-import type { HealthItem } from "../components/dashboard/ContentHealth"
-import QuickActions from "../components/dashboard/QuickActions"
-import RecentProjects from "../components/dashboard/RecentProjects"
-import SkillsSnapshot from "../components/dashboard/SkillsSnapshot"
-import CareerTimeline from "../components/dashboard/CareerTimeline"
+} from "../../projects/projects.service";
+import { skillQueries } from "../../skills/skills.service";
+import { certificateQueries } from "../../certificates/certificates.service";
+import { experienceQueries } from "../../experience/experiences.service";
+import { educationQueries } from "../../education/educations.service";
+import WelcomeStrip from "../components/dashboard/WelcomeStrip";
+import StatStrip from "../components/dashboard/StatStrip";
+import type { StatItem } from "../components/dashboard/StatStrip";
+import ContentHealth from "../components/dashboard/ContentHealth";
+import type { HealthItem } from "../components/dashboard/ContentHealth";
+import QuickActions from "../components/dashboard/QuickActions";
+import RecentProjects from "../components/dashboard/RecentProjects";
+import SkillsSnapshot from "../components/dashboard/SkillsSnapshot";
+import CareerTimeline from "../components/dashboard/CareerTimeline";
 
 export default function DashboardPage() {
-  const personalInfoQuery = useQuery(personalInfoQueries.detail())
-  const projectsQuery = useQuery(projectQueries.list())
-  const skillsQuery = useQuery(skillQueries.list())
-  const categoriesQuery = useQuery(skillQueries.categories())
-  const certificatesQuery = useQuery(certificateQueries.list())
-  const experiencesQuery = useQuery(experienceQueries.list())
-  const educationsQuery = useQuery(educationQueries.list())
+  const personalInfoQuery = useQuery(personalInfoQueries.detail());
+  const projectsQuery = useQuery(projectQueries.list());
+  const skillsQuery = useQuery(skillQueries.list());
+  const categoriesQuery = useQuery(skillQueries.categories());
+  const certificatesQuery = useQuery(certificateQueries.list());
+  const experiencesQuery = useQuery(experienceQueries.list());
+  const educationsQuery = useQuery(educationQueries.list());
 
   const projects = useMemo(
     () => sortProjectsByHierarchy(projectsQuery.data ?? []),
     [projectsQuery.data],
-  )
-  const skills = skillsQuery.data ?? []
-  const categories = categoriesQuery.data ?? []
-  const certificates = certificatesQuery.data ?? []
-  const experiences = experiencesQuery.data ?? []
-  const educations = educationsQuery.data ?? []
-  const personalInfo = personalInfoQuery.data
+  );
+  const skills = skillsQuery.data ?? [];
+  const categories = categoriesQuery.data ?? [];
+  const certificates = certificatesQuery.data ?? [];
+  const experiences = experiencesQuery.data ?? [];
+  const educations = educationsQuery.data ?? [];
+  const personalInfo = personalInfoQuery.data;
 
   const listsLoading =
     projectsQuery.isPending ||
@@ -53,9 +53,9 @@ export default function DashboardPage() {
     categoriesQuery.isPending ||
     certificatesQuery.isPending ||
     experiencesQuery.isPending ||
-    educationsQuery.isPending
+    educationsQuery.isPending;
 
-  const profileLoading = personalInfoQuery.isPending
+  const profileLoading = personalInfoQuery.isPending;
 
   const hasError = [
     personalInfoQuery.error,
@@ -65,11 +65,16 @@ export default function DashboardPage() {
     certificatesQuery.error,
     experiencesQuery.error,
     educationsQuery.error,
-  ].some(Boolean)
+  ].some(Boolean);
 
   const stats: StatItem[] = useMemo(
     () => [
-      { label: "Projects", value: projects.length, icon: Briefcase, to: "/admin/projects" },
+      {
+        label: "Projects",
+        value: projects.length,
+        icon: Briefcase,
+        to: "/admin/projects",
+      },
       { label: "Skills", value: skills.length, icon: Zap, to: "/admin/skills" },
       {
         label: "Certificates",
@@ -104,7 +109,7 @@ export default function DashboardPage() {
       educations.length,
       categories.length,
     ],
-  )
+  );
 
   const healthItems: HealthItem[] = useMemo(
     () => [
@@ -117,7 +122,9 @@ export default function DashboardPage() {
       {
         id: "bio",
         label: "Bio / summary written",
-        done: Boolean(personalInfo?.summary?.trim() || personalInfo?.headline?.trim()),
+        done: Boolean(
+          personalInfo?.summary?.trim() || personalInfo?.headline?.trim(),
+        ),
         to: "/admin/personal-info",
       },
       {
@@ -159,7 +166,7 @@ export default function DashboardPage() {
       experiences.length,
       educations.length,
     ],
-  )
+  );
 
   return (
     <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 sm:gap-5 md:gap-6">
@@ -193,10 +200,12 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      
       <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-5 lg:gap-6">
         <div className="lg:col-span-3">
-          <RecentProjects projects={projects} loading={projectsQuery.isPending} />
+          <RecentProjects
+            projects={projects}
+            loading={projectsQuery.isPending}
+          />
         </div>
         <div className="lg:col-span-2">
           <SkillsSnapshot
@@ -213,5 +222,5 @@ export default function DashboardPage() {
         loading={experiencesQuery.isPending || educationsQuery.isPending}
       />
     </div>
-  )
+  );
 }

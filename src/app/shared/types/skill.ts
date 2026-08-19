@@ -15,4 +15,5 @@ export interface Skill extends Timestamps {
 export interface SkillCategory extends Timestamps {
   id: string
   category: string
+  priority: number
 }

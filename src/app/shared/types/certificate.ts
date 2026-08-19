@@ -1,5 +1,5 @@
-import type { Skill } from "./skill"
-import type { Timestamps } from "./timestamps"
+import type { Skill } from "./skill";
+import type { Timestamps } from "./timestamps";
 
 export interface Certificate extends Timestamps {
   id: string
@@ -7,5 +7,6 @@ export interface Certificate extends Timestamps {
   issuer: string
   year: string
   link: string | null
+  priority: number
   top_skills: Skill[]
 }

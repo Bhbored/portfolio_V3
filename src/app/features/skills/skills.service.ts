@@ -34,6 +34,7 @@ function normalizeSkill(row: Skill): Skill {
 function normalizeCategory(row: SkillCategory): SkillCategory {
   return {
     ...row,
+    priority: Number(row.priority ?? 1),
     created_at: asTimestamp(row.created_at),
     updated_at: asTimestamp(row.updated_at),
   }
@@ -80,6 +81,7 @@ export async function fetchSkillCategories(): Promise<SkillCategory[]> {
   const result = await supabase
     .from("skill_categories")
     .select("*")
+    .order("priority", { ascending: true })
     .order("created_at", { ascending: false })
   const rows = await throwIfError(result, "skill_categories")
   return ((rows ?? []) as SkillCategory[]).map(normalizeCategory)

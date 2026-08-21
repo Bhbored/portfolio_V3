@@ -1,0 +1,30 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+
+User-agent: GPTBot
+Allow: /
+Disallow: /admin
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /admin
+
+User-agent: Claude-Web
+Allow: /
+Disallow: /admin
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin
+
+Sitemap: https://bourhanhassoun.dev/sitemap.xml

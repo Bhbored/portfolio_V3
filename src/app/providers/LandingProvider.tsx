@@ -36,6 +36,7 @@ import {
 } from "../features/certificates/certificates.service";
 import { experienceQueries } from "../features/experience/experiences.service";
 import { educationQueries } from "../features/education/educations.service";
+import { applyPersonalInfoToDocument } from "../../config/site";
 
 interface LandingState {
   personalInfo: PersonalInfo;
@@ -137,6 +138,12 @@ export function LandingProvider({
   const personalInfo = personalInfoQuery.data ?? EMPTY_PERSONAL_INFO;
   const skills = skillsQuery.data ?? [];
   const categories = categoriesQuery.data ?? [];
+
+  useEffect(() => {
+    if (!personalInfoQuery.data) return
+    applyPersonalInfoToDocument(personalInfoQuery.data)
+  }, [personalInfoQuery.data])
+
   const projects = useMemo(
     () => sortProjectsByHierarchy(projectsQuery.data ?? []),
     [projectsQuery.data],

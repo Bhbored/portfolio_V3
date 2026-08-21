@@ -1,0 +1,23 @@
+# Bourhan Hassoun
+> Full Stack Developer - Software Developer specializing in cross-platform applications
+
+Full-stack developer working across React, Blazor, ASP.NET Core, .NET MAUI, and Flutter - from REST APIs to web and mobile clients with clean architecture and offline-ready data flows.
+
+Location: Lebanon
+Contact: bhboredbusiness@gmail.com
+
+## Portfolio
+- [Home](https://bourhanhassoun.dev/): Overview, availability, and introduction
+- [Skills](https://bourhanhassoun.dev/#skills): Tech stack across languages, frameworks, and tools
+- [Projects](https://bourhanhassoun.dev/#projects): Selected cross-platform and full-stack work
+- [Experience](https://bourhanhassoun.dev/#experience): Professional roles and achievements
+- [Certificates](https://bourhanhassoun.dev/#certificates): Credentials and certifications
+- [Education](https://bourhanhassoun.dev/#education): Academic background
+- [Contact](https://bourhanhassoun.dev/#contact): Email and social links
+
+## Profiles
+- [GitHub](https://github.com/Bhbored): Source code and open work
+- [LinkedIn](https://www.linkedin.com/in/bourhan-hassoun-327670303/): Professional profile
+
+## Optional
+- [Admin](https://bourhanhassoun.dev/admin): Private CMS - not for public indexing

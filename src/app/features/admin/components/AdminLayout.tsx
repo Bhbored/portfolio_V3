@@ -1,8 +1,8 @@
-import { useState } from "react"
-import { Outlet, useLocation, Link } from "react-router-dom"
-import { Menu, Shield, LogOut } from "lucide-react"
-import AdminNavMenu from "./AdminNavMenu"
-import { useAuth } from "../../../providers/AuthProvider"
+import { useEffect, useState } from "react";
+import { Outlet, useLocation, Link } from "react-router-dom";
+import { Menu, Shield, LogOut } from "lucide-react";
+import AdminNavMenu from "./AdminNavMenu";
+import { useAuth } from "../../../providers/AuthProvider";
 
 const titles: Record<string, string> = {
   "/admin": "Dashboard",
@@ -13,18 +13,35 @@ const titles: Record<string, string> = {
   "/admin/experiences": "Experience",
   "/admin/educations": "Education",
   "/admin/certificates": "Certificates",
-}
+};
 
 export default function AdminLayout() {
-  const location = useLocation()
-  const { logout } = useAuth()
-  const [drawerOpen, setDrawerOpen] = useState(false)
-  const title = titles[location.pathname] ?? "Admin"
+  const location = useLocation();
+  const { logout } = useAuth();
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const title = titles[location.pathname] ?? "Admin";
+
+  useEffect(() => {
+    const previousTitle = document.title;
+    document.title = `${title} | Admin`;
+    let robots = document.querySelector('meta[name="robots"]');
+    if (!robots) {
+      robots = document.createElement("meta");
+      robots.setAttribute("name", "robots");
+      document.head.appendChild(robots);
+    }
+    const previousRobots = robots.getAttribute("content");
+    robots.setAttribute("content", "noindex, nofollow");
+    return () => {
+      document.title = previousTitle;
+      if (previousRobots) robots.setAttribute("content", previousRobots);
+      else robots.setAttribute("content", "index, follow");
+    };
+  }, [title]);
 
   return (
     <div className="flex min-h-dvh bg-background text-on-surface">
-      
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-[260px] border-r border-white/10 bg-surface-container-high md:flex md:flex-col">
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-65 border-r border-white/10 bg-surface-container-high md:flex md:flex-col">
         <div className="border-b border-white/10 px-6 py-6">
           <Link
             to="/admin"
@@ -37,7 +54,6 @@ export default function AdminLayout() {
         <AdminNavMenu />
       </aside>
 
-      
       {drawerOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
           <button
@@ -46,7 +62,7 @@ export default function AdminLayout() {
             aria-label="Close menu"
             onClick={() => setDrawerOpen(false)}
           />
-          <aside className="relative flex h-full w-[260px] flex-col bg-surface-container-high shadow-glow-cyan">
+          <aside className="relative flex h-full w-65 flex-col bg-surface-container-high shadow-glow-cyan">
             <div className="border-b border-white/10 px-6 py-6">
               <span className="flex items-center gap-2 font-headline text-xl font-bold text-primary">
                 <Shield className="size-6" aria-hidden />
@@ -58,7 +74,7 @@ export default function AdminLayout() {
         </div>
       )}
 
-      <div className="flex min-h-dvh flex-1 flex-col md:ml-[260px]">
+      <div className="flex min-h-dvh flex-1 flex-col md:ml-65">
         <header className="sticky top-0 z-30 flex items-center justify-between gap-4 border-b border-white/10 bg-surface-container-high px-4 py-4 md:px-8 md:py-6">
           <div className="flex items-center gap-3">
             <button
@@ -87,5 +103,5 @@ export default function AdminLayout() {
         </main>
       </div>
     </div>
-  )
+  );
 }

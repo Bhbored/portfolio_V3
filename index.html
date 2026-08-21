@@ -2,10 +2,93 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>%SITE_TITLE%</title>
+    <meta name="title" content="%SITE_TITLE%" />
+    <meta name="description" content="%SITE_DESCRIPTION%" />
+    <meta name="keywords" content="%SITE_KEYWORDS%" />
+    <meta name="author" content="%SITE_NAME%" />
+    <meta name="creator" content="%SITE_NAME%" />
+    <meta name="publisher" content="%SITE_NAME%" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="canonical" href="%SITE_URL%/" />
+    <link rel="describedby" href="%SITE_URL%/llms.txt" type="text/markdown" />
+    <link rel="alternate" type="text/plain" href="%SITE_URL%/llm.txt" title="LLM summary" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>protfolio</title>
+    <link rel="apple-touch-icon" href="/favicon-32x32.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="%SITE_NAME%" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content="%SITE_URL%/" />
+    <meta property="og:title" content="%SITE_TITLE%" />
+    <meta property="og:description" content="%SITE_DESCRIPTION%" />
+    <meta property="og:image" content="%SITE_IMAGE%" />
+    <meta property="og:image:alt" content="%SITE_NAME% - %SITE_JOB_TITLE%" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="%SITE_TITLE%" />
+    <meta name="twitter:description" content="%SITE_DESCRIPTION%" />
+    <meta name="twitter:image" content="%SITE_IMAGE%" />
+    <meta name="twitter:image:alt" content="%SITE_NAME% - %SITE_JOB_TITLE%" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "%SITE_URL%/#website",
+            "url": "%SITE_URL%/",
+            "name": "%SITE_NAME%",
+            "description": "%SITE_DESCRIPTION%",
+            "inLanguage": "en",
+            "publisher": { "@id": "%SITE_URL%/#person" }
+          },
+          {
+            "@type": "Person",
+            "@id": "%SITE_URL%/#person",
+            "name": "%SITE_NAME%",
+            "jobTitle": "%SITE_JOB_TITLE%",
+            "description": "%SITE_HEADLINE%",
+            "url": "%SITE_URL%/",
+            "email": "mailto:%SITE_EMAIL%",
+            "image": "%SITE_IMAGE%",
+            "address": {
+              "@type": "PostalAddress",
+              "addressCountry": "LB",
+              "addressLocality": "%SITE_LOCATION%"
+            },
+            "sameAs": [
+              "%SITE_GITHUB%",
+              "%SITE_LINKEDIN%"
+            ],
+            "knowsAbout": [
+              "React",
+              "TypeScript",
+              "ASP.NET Core",
+              ".NET MAUI",
+              "Flutter",
+              "Blazor",
+              "Full-stack development",
+              "Cross-platform applications"
+            ]
+          },
+          {
+            "@type": "ProfilePage",
+            "@id": "%SITE_URL%/#profile",
+            "url": "%SITE_URL%/",
+            "name": "%SITE_TITLE%",
+            "description": "%SITE_DESCRIPTION%",
+            "mainEntity": { "@id": "%SITE_URL%/#person" },
+            "isPartOf": { "@id": "%SITE_URL%/#website" }
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

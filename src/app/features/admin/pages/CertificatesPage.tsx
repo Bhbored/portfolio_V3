@@ -45,7 +45,8 @@ export default function CertificatesPage() {
   const [page, setPage] = useState(1);
   const [panelOpen, setPanelOpen] = useState(false);
   const [mode, setMode] = useState<"create" | "edit">("create");
-  const [draft, setDraft] = useState<Writable<CertificateRow>>(emptyCertificate);
+  const [draft, setDraft] =
+    useState<Writable<CertificateRow>>(emptyCertificate);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<{
     id: string;

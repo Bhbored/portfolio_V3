@@ -21,7 +21,7 @@ export default function NavMenu() {
 
   return (
     <>
-      <nav className="fixed top-0 w-full h-20 z-50 bg-background/80 backdrop-blur-xl shadow-[0_0_20px_rgba(0,240,255,0.08)] flex justify-between items-center px-6 md:px-12 animate-fade-in-down">
+      <nav className="fixed inset-x-0 top-0 z-50 flex h-20 items-center justify-between bg-background/80 px-6 shadow-[0_0_20px_rgba(0,240,255,0.08)] backdrop-blur-xl animate-fade-in-down md:px-12">
         <div className="absolute inset-0 grid-pattern opacity-20 pointer-events-none" />
 
         

@@ -29,7 +29,7 @@ export default function CertificatesSection() {
   }, [totalPages])
 
   return (
-    <section id="certificates" className="relative min-h-dvh px-4 pb-16 pt-14 sm:px-6 sm:pb-20 sm:pt-16 md:pb-24 md:pt-24">
+    <section id="certificates" className="relative min-h-dvh overflow-x-clip px-4 pb-16 pt-14 sm:px-6 sm:pb-20 sm:pt-16 md:pb-24 md:pt-24">
       <div className="pointer-events-none absolute inset-0 -z-10 opacity-20 mesh-gradient" aria-hidden>
         <div className="absolute top-1/4 right-1/4 size-64 rounded-full bg-primary/10 blur-[120px] md:size-96" />
         <div className="absolute bottom-1/4 left-1/4 size-80 rounded-full bg-accent-orange/5 blur-[150px] md:size-125" />
@@ -70,7 +70,7 @@ export default function CertificatesSection() {
             {pages.map((pageCerts, pi) => (
               <div
                 key={pi}
-                className="grid w-full shrink-0 grid-cols-1 gap-4 sm:gap-6 md:grid-cols-4 md:gap-8"
+                className="grid min-w-full w-full shrink-0 grid-cols-1 gap-4 sm:gap-6 md:grid-cols-4 md:gap-8"
               >
                 {pageCerts.map((cert) => {
                   const realIndex = certificates.indexOf(cert)

@@ -61,28 +61,30 @@ export default function ProjectsSection() {
         </header>
       </div>
 
-      <div className="relative overflow-hidden">
-        {pages.map((pageProjects, pi) => (
-          <div
-            key={pi}
-            aria-hidden={pi !== page}
-            className={`mx-auto grid w-full max-w-384 grid-cols-1 gap-4 px-4 transition-transform duration-500 ease-in-out sm:gap-6 sm:px-6 md:grid-cols-3 ${
-              pi === page
-                ? "relative"
-                : "pointer-events-none absolute inset-x-0 top-0"
-            }`}
-            style={{ transform: `translateX(${(pi - page) * 100}%)` }}
-          >
-            {pageProjects.map((project) => {
-              const realIndex = projects.indexOf(project)
-              return (
-                <div key={project.id ?? realIndex} className="min-w-0">
-                  <ProjectCard project={project} index={realIndex} />
-                </div>
-              )
-            })}
-          </div>
-        ))}
+      <div className="relative w-full overflow-hidden">
+        <div
+          className="flex transition-transform duration-500 ease-in-out"
+          style={{ transform: `translateX(-${page * 100}%)` }}
+        >
+          {pages.map((pageProjects, pi) => (
+            <div
+              key={pi}
+              aria-hidden={pi !== page}
+              className="min-w-full w-full shrink-0 px-4 sm:px-6"
+            >
+              <div className="mx-auto grid w-full max-w-384 grid-cols-1 gap-4 sm:gap-6 md:grid-cols-3">
+                {pageProjects.map((project) => {
+                  const realIndex = projects.indexOf(project)
+                  return (
+                    <div key={project.id ?? realIndex} className="min-w-0">
+                      <ProjectCard project={project} index={realIndex} />
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="mx-auto mt-6 flex max-w-384 items-center justify-between gap-3 px-4 sm:mt-8 sm:px-6">

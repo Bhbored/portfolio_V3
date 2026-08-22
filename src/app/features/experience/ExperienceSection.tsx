@@ -5,7 +5,7 @@ export default function ExperienceSection() {
   const { experiences } = useLanding()
 
   return (
-    <section id="experience" className="relative min-h-dvh px-4 pb-20 pt-14 sm:px-6 sm:pb-24 sm:pt-16 md:pb-32 md:pt-24">
+    <section id="experience" className="relative min-h-dvh overflow-x-clip px-4 pb-20 pt-14 sm:px-6 sm:pb-24 sm:pt-16 md:pb-32 md:pt-24">
       <div className="pointer-events-none absolute inset-0 -z-10 opacity-20 mesh-gradient" aria-hidden>
         <div className="absolute top-1/4 left-1/4 size-64 rounded-full bg-primary/10 blur-[120px] md:size-96" />
         <div className="absolute bottom-1/4 right-1/4 size-80 rounded-full bg-accent-orange/5 blur-[150px] md:size-[500px]" />

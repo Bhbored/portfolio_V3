@@ -91,7 +91,7 @@ export default function SkillsSection() {
     <section
       ref={sectionRef}
       id="skills"
-      className="mx-auto max-w-384 px-4 pb-16 pt-14 mesh-gradient sm:px-6 sm:pb-20 sm:pt-16 md:pb-24 md:pr-20 md:pt-20 lg:pr-24"
+      className="mx-auto max-w-384 overflow-x-clip px-4 pb-16 pt-14 mesh-gradient sm:px-6 sm:pb-20 sm:pt-16 md:pb-24 md:pr-20 md:pt-20 lg:pr-24"
     >
       <header className="skills-section-header relative mb-8 sm:mb-10 md:mb-12">
         <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end md:gap-6">
@@ -136,7 +136,7 @@ export default function SkillsSection() {
                 role="tab"
                 aria-selected={safeCategoryIndex === index}
                 onClick={() => selectCategory(index)}
-                className={`rounded-full border px-4 py-2 text-left font-label text-xs uppercase leading-snug tracking-widest transition-colors ${
+                className={`max-w-full rounded-full border px-4 py-2 text-left font-label text-xs uppercase leading-snug tracking-widest transition-colors break-words ${
                   safeCategoryIndex === index
                     ? "border-primary/40 bg-primary/15 text-primary"
                     : "border-white/10 text-on-surface-variant hover:border-primary/30 hover:text-primary"

@@ -32,7 +32,7 @@ function RouteFallback() {
 
 function HomePage() {
   return (
-    <div>
+    <div className="min-w-0 max-w-full overflow-x-clip">
       <HeroSection />
       <SkillsSection />
       <ProjectsSection />

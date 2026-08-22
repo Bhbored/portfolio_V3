@@ -34,13 +34,24 @@
   --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+html {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
 body {
   margin: 0;
   background-color: var(--color-background);
   color: #e4e1e9;
-  overflow-x: hidden;
+  overflow-x: clip;
+  max-width: 100%;
   font-family: var(--font-body);
   font-weight: 300;
+}
+
+#root {
+  overflow-x: clip;
+  max-width: 100%;
 }
 
 @utility mesh-gradient {

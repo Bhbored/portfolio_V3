@@ -6,7 +6,7 @@ export default function Footer() {
   const { social, email, headline, name } = personalInfo
 
   return (
-    <footer className="w-full py-12 px-6 md:px-12 border-t border-white/5 bg-background">
+    <footer className="w-full max-w-full overflow-x-clip border-t border-white/5 bg-background px-6 py-12 md:px-12">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mb-12 justify-items-center">
           

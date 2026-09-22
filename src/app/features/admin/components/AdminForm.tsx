@@ -1,14 +1,14 @@
-import { useState, type ReactNode } from "react"
-import { ChevronDown, X } from "lucide-react"
+import { useState, type ReactNode } from "react";
+import { ChevronDown, X } from "lucide-react";
 
 const fieldClass =
-  "w-full rounded-md border border-outline-variant/40 bg-surface-container-low/40 px-3 py-3 font-body text-sm text-on-surface placeholder:text-on-surface-variant focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"
+  "w-full rounded-md border border-outline-variant/40 bg-surface-container-low/40 px-3 py-3 font-body text-sm text-on-surface placeholder:text-on-surface-variant focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30";
 
 const labelClass =
-  "mb-2 block font-label text-xs uppercase tracking-widest text-on-surface-variant"
+  "mb-2 block font-label text-xs uppercase tracking-widest text-on-surface-variant";
 
 export function FieldLabel({ children }: { readonly children: ReactNode }) {
-  return <span className={labelClass}>{children}</span>
+  return <span className={labelClass}>{children}</span>;
 }
 
 export function TextField({
@@ -19,12 +19,12 @@ export function TextField({
   placeholder,
   required,
 }: Readonly<{
-  label: string
-  value: string
-  onChange: (value: string) => void
-  type?: string
-  placeholder?: string
-  required?: boolean
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  type?: string;
+  placeholder?: string;
+  required?: boolean;
 }>) {
   return (
     <label className="block">
@@ -38,7 +38,7 @@ export function TextField({
         className={fieldClass}
       />
     </label>
-  )
+  );
 }
 
 export function TextAreaField({
@@ -48,11 +48,11 @@ export function TextAreaField({
   rows = 4,
   placeholder,
 }: Readonly<{
-  label: string
-  value: string
-  onChange: (value: string) => void
-  rows?: number
-  placeholder?: string
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  rows?: number;
+  placeholder?: string;
 }>) {
   return (
     <label className="block">
@@ -65,7 +65,7 @@ export function TextAreaField({
         className={`${fieldClass} resize-y`}
       />
     </label>
-  )
+  );
 }
 
 export function SelectField({
@@ -74,10 +74,10 @@ export function SelectField({
   onChange,
   children,
 }: Readonly<{
-  label: string
-  value: string | number
-  onChange: (value: string) => void
-  children: ReactNode
+  label: string;
+  value: string | number;
+  onChange: (value: string) => void;
+  children: ReactNode;
 }>) {
   return (
     <label className="block">
@@ -93,7 +93,7 @@ export function SelectField({
         <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-on-surface-variant" />
       </div>
     </label>
-  )
+  );
 }
 
 export function TagListField({
@@ -102,23 +102,23 @@ export function TagListField({
   onChange,
   placeholder,
 }: Readonly<{
-  label: string
-  items: string[]
-  onChange: (items: string[]) => void
-  placeholder: string
+  label: string;
+  items: string[];
+  onChange: (items: string[]) => void;
+  placeholder: string;
 }>) {
-  const [draft, setDraft] = useState("")
+  const [draft, setDraft] = useState("");
 
   const commit = (raw: string) => {
-    const next = parseTagInput(raw)
-    if (!next.length) return
-    const merged = [...items]
+    const next = parseTagInput(raw);
+    if (!next.length) return;
+    const merged = [...items];
     for (const item of next) {
-      if (!merged.includes(item)) merged.push(item)
+      if (!merged.includes(item)) merged.push(item);
     }
-    onChange(merged)
-    setDraft("")
-  }
+    onChange(merged);
+    setDraft("");
+  };
 
   return (
     <div>
@@ -147,15 +147,17 @@ export function TagListField({
         placeholder={placeholder}
         onChange={(e) => setDraft(e.target.value)}
         onPaste={(e) => {
-          const text = e.clipboardData.getData("text")
-          if (!text.includes("\n") && !text.includes(",")) return
-          e.preventDefault()
-          commit(`${draft}${draft && !draft.endsWith("\n") ? "\n" : ""}${text}`)
+          const text = e.clipboardData.getData("text");
+          if (!text.includes("\n")) return;
+          e.preventDefault();
+          commit(
+            `${draft}${draft && !draft.endsWith("\n") ? "\n" : ""}${text}`,
+          );
         }}
         onKeyDown={(e) => {
           if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
-            e.preventDefault()
-            commit(draft)
+            e.preventDefault();
+            commit(draft);
           }
         }}
         className={`${fieldClass} min-h-20 resize-y`}
@@ -171,17 +173,15 @@ export function TagListField({
         </button>
       </div>
     </div>
-  )
+  );
 }
 
-/** Newlines preferred; commas only when the paste/input is a single line. */
+/** Each line is one item; commas are preserved as part of the item text. */
 function parseTagInput(raw: string): string[] {
-  const trimmed = raw.trim()
-  if (!trimmed) return []
-  const parts = trimmed.includes("\n")
-    ? trimmed.split(/\n+/)
-    : trimmed.split(",")
-  return parts.map((part) => part.trim()).filter(Boolean)
+  const trimmed = raw.trim();
+  if (!trimmed) return [];
+  const parts = trimmed.split(/\n+/);
+  return parts.map((part) => part.trim()).filter(Boolean);
 }
 
 export function PrimaryButton({
@@ -190,10 +190,10 @@ export function PrimaryButton({
   type = "button",
   onClick,
 }: Readonly<{
-  children: ReactNode
-  disabled?: boolean
-  type?: "button" | "submit"
-  onClick?: () => void
+  children: ReactNode;
+  disabled?: boolean;
+  type?: "button" | "submit";
+  onClick?: () => void;
 }>) {
   return (
     <button
@@ -204,7 +204,7 @@ export function PrimaryButton({
     >
       {children}
     </button>
-  )
+  );
 }
 
 export function SecondaryButton({
@@ -212,9 +212,9 @@ export function SecondaryButton({
   onClick,
   disabled,
 }: Readonly<{
-  children: ReactNode
-  onClick?: () => void
-  disabled?: boolean
+  children: ReactNode;
+  onClick?: () => void;
+  disabled?: boolean;
 }>) {
   return (
     <button
@@ -225,7 +225,7 @@ export function SecondaryButton({
     >
       {children}
     </button>
-  )
+  );
 }
 
 export function PageHeader({
@@ -233,9 +233,9 @@ export function PageHeader({
   description,
   action,
 }: Readonly<{
-  title: string
-  description: string
-  action?: ReactNode
+  title: string;
+  description: string;
+  action?: ReactNode;
 }>) {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -249,23 +249,19 @@ export function PageHeader({
       </div>
       {action}
     </div>
-  )
+  );
 }
 
-export function DataTableShell({
-  children,
-}: {
-  readonly children: ReactNode
-}) {
+export function DataTableShell({ children }: { readonly children: ReactNode }) {
   return (
     <section className="overflow-hidden rounded-xl border border-white/10 bg-surface-container-high shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
       {children}
     </section>
-  )
+  );
 }
 
 export const thClass =
-  "px-4 py-3.5 font-label text-xs uppercase tracking-widest text-on-surface-variant"
-export const tdClass = "px-4 py-3.5 font-body text-sm text-on-surface"
+  "px-4 py-3.5 font-label text-xs uppercase tracking-widest text-on-surface-variant";
+export const tdClass = "px-4 py-3.5 font-body text-sm text-on-surface";
 export const rowClass =
-  "border-b border-white/5 transition-colors hover:bg-white/[0.03]"
+  "border-b border-white/5 transition-colors hover:bg-white/[0.03]";
